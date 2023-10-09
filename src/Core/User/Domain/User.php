@@ -3,6 +3,7 @@
 namespace App\Core\User\Domain;
 
 use App\Common\EventManager\EventsCollectorTrait;
+use App\Core\User\Domain\Event\UserCreatedEvent;
 use Doctrine\DBAL\Types\BooleanType;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -21,7 +22,6 @@ class User
      */
     private ?int $id;
 
-
     /**
      * @var bool
      *
@@ -39,7 +39,7 @@ class User
         $this->id = null;
         $this->email = $email;
 
-        $this->record();
+        $this->record(new UserCreatedEvent($this));
     }
 
     public function getEmail(): string
@@ -47,7 +47,7 @@ class User
         return $this->email;
     }
 
-    public function getIsActive(): bool|int
+    public function isActive(): bool|int
     {
         return $this->isActive;
     }
@@ -55,5 +55,15 @@ class User
     public function setIsActive(bool|int $isActive): void
     {
         $this->isActive = $isActive;
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function setId(?int $id): void
+    {
+        $this->id = $id;
     }
 }

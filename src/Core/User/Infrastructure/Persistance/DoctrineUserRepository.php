@@ -2,10 +2,10 @@
 
 namespace App\Core\User\Infrastructure\Persistance;
 
-use App\Core\Invoice\Domain\Invoice;
 use App\Core\User\Domain\Exception\UserNotFoundException;
 use App\Core\User\Domain\Repository\UserRepositoryInterface;
 use App\Core\User\Domain\User;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -48,5 +48,21 @@ class DoctrineUserRepository implements UserRepositoryInterface
         foreach ($events as $event) {
             $this->eventDispatcher->dispatch($event);
         }
+    }
+
+    public function flush(): void
+    {
+        $this->entityManager->flush();
+    }
+
+    public function getUserByActive(int $isActive): array
+    {
+        return $this->entityManager->createQueryBuilder()
+            ->select('u')
+            ->from(User::class, 'u')
+            ->where('u.isActive = :isActive')
+            ->setParameter(':isActive', $isActive)
+            ->getQuery()
+            ->execute();
     }
 }

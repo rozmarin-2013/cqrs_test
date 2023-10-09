@@ -2,13 +2,12 @@
 
 namespace App\Core\User\Application\Command\CreateUser;
 
-use App\Core\Invoice\Application\Command\CreateInvoice\CreateUserCommand;
-use App\Core\Invoice\Domain\Repository\InvoiceRepositoryInterface;
 use App\Core\User\Domain\Repository\UserRepositoryInterface;
+use App\Core\User\Domain\User;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
-class CreateInvoiceHandler
+class CreateUserHandler
 {
     public function __construct(
         private readonly UserRepositoryInterface $userRepository
@@ -16,11 +15,10 @@ class CreateInvoiceHandler
 
     public function __invoke(CreateUserCommand $command): void
     {
-        $this->invoiceRepository->save(new Invoice(
-            $this->userRepository->getByEmail($command->email),
-            $command->amount
+        $this->userRepository->save(new User(
+            $command->email
         ));
 
-        $this->invoiceRepository->flush();
+        $this->userRepository->flush();
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Core\Invoice\UserInterface\Cli;
 
-use App\Core\Invoice\Application\Command\CreateInvoice\CreateUserCommand;
+use App\Core\Invoice\Application\Command\CreateInvoice\CreateInvoiceCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -23,7 +23,7 @@ class CreateInvoice extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->bus->dispatch(new CreateUserCommand(
+        $this->bus->dispatch(new CreateInvoiceCommand(
             $input->getArgument('email'),
             $input->getArgument('amount')
         ));

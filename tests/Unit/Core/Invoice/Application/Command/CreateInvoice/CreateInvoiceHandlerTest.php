@@ -2,6 +2,7 @@
 
 namespace App\Tests\Unit\Core\Invoice\Application\Command\CreateInvoice;
 
+use App\Core\Invoice\Application\Command\CreateInvoice\CreateInvoiceCommand;
 use App\Core\Invoice\Application\Command\CreateInvoice\CreateUserCommand;
 use App\Core\Invoice\Application\Command\CreateInvoice\CreateInvoiceHandler;
 use App\Core\Invoice\Domain\Exception\InvoiceException;
@@ -54,7 +55,7 @@ class CreateInvoiceHandlerTest extends TestCase
         $this->invoiceRepository->expects(self::once())
             ->method('flush');
 
-        $this->handler->__invoke((new CreateUserCommand('test@test.pl', 12500)));
+        $this->handler->__invoke((new CreateInvoiceCommand('test@test.pl', 12500)));
     }
 
     public function test_handle_user_not_exists(): void
@@ -65,13 +66,13 @@ class CreateInvoiceHandlerTest extends TestCase
             ->method('getByEmail')
             ->willThrowException(new UserNotFoundException());
 
-        $this->handler->__invoke((new CreateUserCommand('test@test.pl', 12500)));
+        $this->handler->__invoke((new CreateInvoiceCommand('test@test.pl', 12500)));
     }
 
     public function test_handle_invoice_invalid_amount(): void
     {
         $this->expectException(InvoiceException::class);
 
-        $this->handler->__invoke((new CreateUserCommand('test@test.pl', -5)));
+        $this->handler->__invoke((new CreateInvoiceCommand('test@test.pl', -5)));
     }
 }
